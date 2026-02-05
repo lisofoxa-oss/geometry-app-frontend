@@ -1,28 +1,24 @@
-# Node modules (если будешь добавлять бэкенд)
-node_modules/
-package-lock.json
-
-# Временные файлы
-*.tmp
+# Logs
+logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Secrets (токены, ключи)
-.env
-secrets.json
-config/local.js
-
-# Build (если будешь использовать сборщик)
-dist/
-build/
-
-# Database (когда добавишь бэкенд)
-*.sqlite
-*.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
