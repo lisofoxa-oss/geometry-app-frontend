@@ -1,0 +1,28 @@
+# Node modules (если будешь добавлять бэкенд)
+node_modules/
+package-lock.json
+
+# Временные файлы
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets (токены, ключи)
+.env
+secrets.json
+config/local.js
+
+# Build (если будешь использовать сборщик)
+dist/
+build/
+
+# Database (когда добавишь бэкенд)
+*.sqlite
+*.db

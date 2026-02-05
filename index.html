@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Геометрия 7 класс | Учебные карточки</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #3B82F6;
+            --primary-light: #60A5FA;
+            --primary-dark: #2563EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --bg: #F8FAFC;
+            --surface: #FFFFFF;
+            --text: #1E293B;
+            --text-secondary: #64748B;
+            --border: #E2E8F0;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: 'Urbanist', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Геометрический фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, transparent 0%, transparent 48%, var(--primary) 48%, var(--primary) 52%, transparent 52%),
+                linear-gradient(45deg, transparent 0%, transparent 48%, rgba(59, 130, 246, 0.05) 48%, rgba(59, 130, 246, 0.05) 52%, transparent 52%);
+            background-size: 80px 80px;
+            opacity: 0.3;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        #root {
+            position: relative;
+            z-index: 1;
+            max-width: 100%;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            position: relative;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 16px 20px;
+            background: var(--surface);
+            border-bottom: 2px solid var(--border);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab {
+            flex-shrink: 0;
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Urbanist', sans-serif;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .tab:not(.active):hover {
+            background: var(--border);
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 20px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--bg), white);
+            padding: 16px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid var(--border);
+            transition: transform 0.2s ease;
+        }
+        
+        .stat-card:active {
+            transform: scale(0.95);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        
+        /* Content Area */
+        .content {
+            padding: 20px;
+        }
+        
+        /* Flashcard */
+        .flashcard-container {
+            perspective: 1000px;
+            margin-bottom: 24px;
+        }
+        
+        .flashcard {
+            position: relative;
+            width: 100%;
+            min-height: 320px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-face {
+            position: absolute;
+            width: 100%;
+            min-height: 320px;
+            backface-visibility: hidden;
+            border-radius: 24px;
+            padding: 32px 24px;
+            box-shadow: 0 10px 40px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .card-front {
+            background: linear-gradient(135deg, white, #F1F5F9);
+            border: 3px solid var(--primary);
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            transform: rotateY(180deg);
+        }
+        
+        .card-type-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-definition {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .badge-theorem {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        
+        .card-question {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 20px 0;
+            line-height: 1.4;
+        }
+        
+        .card-hint {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 16px;
+            padding: 12px 20px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 12px;
+            font-style: italic;
+        }
+        
+        .card-answer {
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 16px 0;
+        }
+        
+        .card-formula {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 20px 0;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+        }
+        
+        .card-properties {
+            margin-top: 20px;
+            text-align: left;
+            width: 100%;
+        }
+        
+        .card-properties li {
+            margin: 8px 0;
+            font-size: 15px;
+            list-style: none;
+        }
+        
+        /* Action Buttons */
+        .card-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Urbanist', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        
+        .btn-know {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+        
+        .btn-learning {
+            background: linear-gradient(135deg, var(--warning), #D97706);
+            color: white;
+        }
+        
+        .btn-forgot {
+            background: linear-gradient(135deg, var(--danger), #DC2626);
+            color: white;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            padding: 20px;
+            background: var(--surface);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background: var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 20px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Mode Selection */
+        .mode-selection {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .mode-card {
+            background: var(--surface);
+            padding: 24px;
+            border-radius: 20px;
+            border: 3px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        
+        .mode-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+        }
+        
+        .mode-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .mode-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .mode-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        /* Completion Screen */
+        .completion-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .completion-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 1s ease-in-out;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .completion-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+        
+        .completion-message {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+        
+        .btn-restart {
+            padding: 16px 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Urbanist', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .card-question {
+                font-size: 18px;
+            }
+            
+            .card-answer {
+                font-size: 16px;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        // ========== DATA ==========
+        const trianglesData = {
+            id: 'triangles',
+            title: '🔺 Треугольники',
+            description: 'Признаки равенства, виды треугольников, свойства',
+            icon: '🔺',
+            color: '#3B82F6',
+            cards: [
+                {
+                    id: 'tri-001',
+                    type: 'definition',
+                    difficulty: 1,
+                    question: 'Что такое треугольник?',
+                    answer: 'Треугольник — это геометрическая фигура, состоящая из трёх точек (вершин), не лежащих на одной прямой, и трёх отрезков (сторон), попарно соединяющих эти точки.',
+                    hint: 'Три вершины, три стороны'
+                },
+                {
+                    id: 'tri-002',
+                    type: 'theorem',
+                    difficulty: 1,
+                    question: 'Чему равна сумма углов треугольника?',
+                    answer: 'Сумма углов любого треугольника равна 180°',
+                    hint: 'Одно из самых важных свойств!',
+                    formula: '∠A + ∠B + ∠C = 180°'
+                },
+                {
+                    id: 'tri-003',
+                    type: 'definition',
+                    difficulty: 1,
+                    question: 'Какой треугольник называется ОСТРОУГОЛЬНЫМ?',
+                    answer: 'Остроугольный треугольник — это треугольник, у которого все три угла острые (меньше 90°).',
+                    hint: 'Все углы острые',
+                    example: '∠A = 60°, ∠B = 70°, ∠C = 50°'
+                },
+                {
+                    id: 'tri-004',
+                    type: 'definition',
+                    difficulty: 1,
+                    question: 'Какой треугольник называется ПРЯМОУГОЛЬНЫМ?',
+                    answer: 'Прямоугольный треугольник — это треугольник, у которого один угол равен 90° (прямой угол).',
+                    hint: 'Один угол 90°',
+                    example: 'Стороны, образующие прямой угол, называются катетами, а третья сторона — гипотенузой'
+                },
+                {
+                    id: 'tri-005',
+                    type: 'definition',
+                    difficulty: 1,
+                    question: 'Какой треугольник называется ТУПОУГОЛЬНЫМ?',
+                    answer: 'Тупоугольный треугольник — это треугольник, у которого один угол больше 90° (тупой угол).',
+                    hint: 'Один угол больше 90°',
+                    example: '∠A = 110°, ∠B = 40°, ∠C = 30°'
+                },
+                {
+                    id: 'tri-006',
+                    type: 'definition',
+                    difficulty: 1,
+                    question: 'Какой треугольник называется РАЗНОСТОРОННИМ?',
+                    answer: 'Разносторонний треугольник — это треугольник, у которого все три стороны имеют разную длину.',
+                    hint: 'Все стороны разные',
+                    example: 'AB ≠ BC ≠ AC'
+                },
+                {
+                    id: 'tri-007',
+                    type: 'definition',
+                    difficulty: 2,
+                    question: 'Какой треугольник называется РАВНОБЕДРЕННЫМ?',
+                    answer: 'Равнобедренный треугольник — это треугольник, у которого две стороны равны. Равные стороны называются боковыми, третья сторона — основанием.',
+                    hint: 'Две стороны равны',
+                    properties: [
+                        '✓ Углы при основании равны',
+                        '✓ Высота, медиана и биссектриса к основанию совпадают'
+                    ]
+                },
+                {
+                    id: 'tri-008',
+                    type: 'theorem',
+                    difficulty: 2,
+                    question: 'Свойство углов равнобедренного треугольника',
+                    answer: 'В равнобедренном треугольнике углы при основании равны.',
+                    hint: 'Если AB = BC, то...',
+                    formula: 'Если AB = BC, то ∠A = ∠C'
+                },
+                {
+                    id: 'tri-009',
+                    type: 'definition',
+                    difficulty: 1,
+                    question: 'Какой треугольник называется РАВНОСТОРОННИМ?',
+                    answer: 'Равносторонний треугольник — это треугольник, у которого все три стороны равны.',
+                    hint: 'Все стороны одинаковые',
+                    properties: [
+                        '✓ Все углы равны 60°',
+                        '✓ Это частный случай равнобедренного треугольника'
+                    ]
+                },
+                {
+                    id: 'tri-010',
+                    type: 'theorem',
+                    difficulty: 3,
+                    question: 'Первый признак равенства треугольников',
+                    answer: 'Если две стороны и угол между ними одного треугольника равны соответственно двум сторонам и углу между ними другого треугольника, то такие треугольники равны.',
+                    hint: 'Две стороны и угол МЕЖДУ ними',
+                    formula: 'AB = A₁B₁, AC = A₁C₁, ∠A = ∠A₁',
+                    shortName: 'По двум сторонам и углу между ними'
+                },
+                {
+                    id: 'tri-011',
+                    type: 'theorem',
+                    difficulty: 3,
+                    question: 'Второй признак равенства треугольников',
+                    answer: 'Если сторона и два прилежащих к ней угла одного треугольника равны соответственно стороне и двум прилежащим к ней углам другого треугольника, то такие треугольники равны.',
+                    hint: 'Сторона и два угла ПРИ НЕЙ',
+                    formula: 'AB = A₁B₁, ∠A = ∠A₁, ∠B = ∠B₁',
+                    shortName: 'По стороне и двум прилежащим углам'
+                },
+                {
+                    id: 'tri-012',
+                    type: 'theorem',
+                    difficulty: 3,
+                    question: 'Третий признак равенства треугольников',
+                    answer: 'Если три стороны одного треугольника равны соответственно трём сторонам другого треугольника, то такие треугольники равны.',
+                    hint: 'Три стороны',
+                    formula: 'AB = A₁B₁, BC = B₁C₁, AC = A₁C₁',
+                    shortName: 'По трём сторонам'
+                },
+                {
+                    id: 'tri-013',
+                    type: 'definition',
+                    difficulty: 2,
+                    question: 'Что такое МЕДИАНА треугольника?',
+                    answer: 'Медиана треугольника — это отрезок, соединяющий вершину треугольника с серединой противоположной стороны.',
+                    hint: 'До СЕРЕДИНЫ стороны',
+                    properties: [
+                        '✓ В треугольнике три медианы',
+                        '✓ Все медианы пересекаются в одной точке'
+                    ]
+                },
+                {
+                    id: 'tri-014',
+                    type: 'definition',
+                    difficulty: 2,
+                    question: 'Что такое БИССЕКТРИСА треугольника?',
+                    answer: 'Биссектриса треугольника — это отрезок биссектрисы угла треугольника, соединяющий вершину с точкой на противоположной стороне.',
+                    hint: 'Делит УГОЛ пополам',
+                    properties: [
+                        '✓ Делит угол на два равных угла',
+                        '✓ В треугольнике три биссектрисы'
+                    ]
+                },
+                {
+                    id: 'tri-015',
+                    type: 'definition',
+                    difficulty: 2,
+                    question: 'Что такое ВЫСОТА треугольника?',
+                    answer: 'Высота треугольника — это перпендикуляр, опущенный из вершины треугольника на противоположную сторону (или её продолжение).',
+                    hint: 'Перпендикуляр к стороне',
+                    properties: [
+                        '✓ В треугольнике три высоты',
+                        '✓ Образует прямой угол с основанием'
+                    ]
+                },
+                {
+                    id: 'tri-016',
+                    type: 'theorem',
+                    difficulty: 2,
+                    question: 'Неравенство треугольника',
+                    answer: 'Любая сторона треугольника меньше суммы двух других сторон.',
+                    hint: 'Одна сторона < сумма двух других',
+                    formula: 'AB < AC + BC'
+                }
+            ]
+        };
+        
+        // ========== STORAGE ==========
+        const Storage = {
+            getProgress: (topicId) => {
+                const data = localStorage.getItem(`progress_${topicId}`);
+                return data ? JSON.parse(data) : {};
+            },
+            
+            setProgress: (topicId, cardId, level) => {
+                const progress = Storage.getProgress(topicId);
+                progress[cardId] = {
+                    level: level, // 0: forgot, 1: learning, 2: know
+                    lastReview: Date.now(),
+                    reviewCount: (progress[cardId]?.reviewCount || 0) + 1
+                };
+                localStorage.setItem(`progress_${topicId}`, JSON.stringify(progress));
+            },
+            
+            getStats: (topicId) => {
+                const progress = Storage.getProgress(topicId);
+                const total = Object.keys(progress).length;
+                const mastered = Object.values(progress).filter(p => p.level === 2).length;
+                const learning = Object.values(progress).filter(p => p.level === 1).length;
+                return { total, mastered, learning };
+            }
+        };
+        
+        // ========== COMPONENTS ==========
+        
+        function FlashCard({ card, onAnswer, onFlip, isFlipped }) {
+            return (
+                <div className="flashcard-container">
+                    <div 
+                        className={`flashcard ${isFlipped ? 'flipped' : ''}`}
+                        onClick={onFlip}
+                    >
+                        {/* Front */}
+                        <div className="card-face card-front">
+                            <div className={`card-type-badge badge-${card.type}`}>
+                                {card.type === 'definition' ? 'Определение' : 'Теорема'}
+                            </div>
+                            <div className="card-question">{card.question}</div>
+                            {card.hint && (
+                                <div className="card-hint">💡 {card.hint}</div>
+                            )}
+                            <div style={{ marginTop: '20px', fontSize: '14px', color: '#64748B' }}>
+                                👆 Нажми, чтобы увидеть ответ
+                            </div>
+                        </div>
+                        
+                        {/* Back */}
+                        <div className="card-face card-back">
+                            <div className="card-answer">{card.answer}</div>
+                            
+                            {card.formula && (
+                                <div className="card-formula">{card.formula}</div>
+                            )}
+                            
+                            {card.properties && (
+                                <ul className="card-properties">
+                                    {card.properties.map((prop, i) => (
+                                        <li key={i}>{prop}</li>
+                                    ))}
+                                </ul>
+                            )}
+                            
+                            {card.example && (
+                                <div style={{ marginTop: '16px', fontSize: '14px', opacity: 0.9 }}>
+                                    Пример: {card.example}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    
+                    {isFlipped && (
+                        <div className="card-actions">
+                            <button className="action-btn btn-forgot" onClick={() => onAnswer(0)}>
+                                😔 Забыл
+                            </button>
+                            <button className="action-btn btn-learning" onClick={() => onAnswer(1)}>
+                                🤔 Учу
+                            </button>
+                            <button className="action-btn btn-know" onClick={() => onAnswer(2)}>
+                                ✅ Знаю
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+        
+        function ProgressBar({ current, total }) {
+            const percentage = total > 0 ? (current / total) * 100 : 0;
+            
+            return (
+                <div className="progress-container">
+                    <div className="progress-label">
+                        <span>Прогресс</span>
+                        <span>{current} / {total}</span>
+                    </div>
+                    <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: `${percentage}%` }}></div>
+                    </div>
+                </div>
+            );
+        }
+        
+        function StatsBar({ mastered, learning, total }) {
+            return (
+                <div className="stats-bar">
+                    <div className="stat-card">
+                        <div className="stat-value">{mastered}</div>
+                        <div className="stat-label">Знаю</div>
+                    </div>
+                    <div className="stat-card">
+                        <div className="stat-value">{learning}</div>
+                        <div className="stat-label">Учу</div>
+                    </div>
+                    <div className="stat-card">
+                        <div className="stat-value">{total}</div>
+                        <div className="stat-label">Всего</div>
+                    </div>
+                </div>
+            );
+        }
+        
+        function ModeSelection({ onSelectMode }) {
+            return (
+                <div className="content">
+                    <h2 style={{ fontSize: '24px', fontWeight: '800', marginBottom: '20px' }}>
+                        Выбери режим обучения
+                    </h2>
+                    <div className="mode-selection">
+                        <div className="mode-card" onClick={() => onSelectMode('study')}>
+                            <div className="mode-icon">📚</div>
+                            <div className="mode-title">Изучение</div>
+                            <div className="mode-description">
+                                Просматривай карточки в своём темпе
+                            </div>
+                        </div>
+                        
+                        <div className="mode-card" onClick={() => onSelectMode('practice')}>
+                            <div className="mode-icon">🧠</div>
+                            <div className="mode-title">Тренировка</div>
+                            <div className="mode-description">
+                                Повторяй карточки, которые нужно учить
+                            </div>
+                        </div>
+                        
+                        <div className="mode-card" onClick={() => onSelectMode('test')}>
+                            <div className="mode-icon">⚡</div>
+                            <div className="mode-title">Быстрый тест</div>
+                            <div className="mode-description">
+                                10 случайных вопросов на время
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        function CompletionScreen({ onRestart, stats }) {
+            return (
+                <div className="completion-screen">
+                    <div className="completion-icon">🎉</div>
+                    <div className="completion-title">Отлично!</div>
+                    <div className="completion-message">
+                        Ты прошёл все карточки в этой сессии!<br/>
+                        Продолжай в том же духе! 💪
+                    </div>
+                    <button className="btn-restart" onClick={onRestart}>
+                        Начать заново
+                    </button>
+                </div>
+            );
+        }
+        
+        function App() {
+            const [mode, setMode] = useState(null);
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [isFlipped, setIsFlipped] = useState(false);
+            const [sessionCards, setSessionCards] = useState([]);
+            const [completed, setCompleted] = useState(false);
+            
+            const topic = trianglesData;
+            const progress = Storage.getProgress(topic.id);
+            const stats = Storage.getStats(topic.id);
+            
+            useEffect(() => {
+                // Telegram Web App integration
+                if (window.Telegram?.WebApp) {
+                    window.Telegram.WebApp.ready();
+                    window.Telegram.WebApp.expand();
+                }
+            }, []);
+            
+            const startSession = (selectedMode) => {
+                setMode(selectedMode);
+                
+                let cards = [];
+                if (selectedMode === 'study') {
+                    cards = [...topic.cards];
+                } else if (selectedMode === 'practice') {
+                    // Карточки, которые нужно повторить
+                    cards = topic.cards.filter(card => {
+                        const p = progress[card.id];
+                        return !p || p.level < 2;
+                    });
+                } else if (selectedMode === 'test') {
+                    // 10 случайных карточек
+                    const shuffled = [...topic.cards].sort(() => Math.random() - 0.5);
+                    cards = shuffled.slice(0, 10);
+                }
+                
+                setSessionCards(cards);
+                setCurrentIndex(0);
+                setIsFlipped(false);
+                setCompleted(false);
+            };
+            
+            const handleFlip = () => {
+                setIsFlipped(!isFlipped);
+            };
+            
+            const handleAnswer = (level) => {
+                const card = sessionCards[currentIndex];
+                Storage.setProgress(topic.id, card.id, level);
+                
+                if (currentIndex < sessionCards.length - 1) {
+                    setCurrentIndex(currentIndex + 1);
+                    setIsFlipped(false);
+                } else {
+                    setCompleted(true);
+                }
+            };
+            
+            const handleRestart = () => {
+                setMode(null);
+                setCompleted(false);
+            };
+            
+            if (!mode) {
+                return (
+                    <>
+                        <div className="header">
+                            <h1>{topic.icon} {topic.title}</h1>
+                            <p>{topic.description}</p>
+                        </div>
+                        <StatsBar 
+                            mastered={stats.mastered}
+                            learning={stats.learning}
+                            total={topic.cards.length}
+                        />
+                        <ModeSelection onSelectMode={startSession} />
+                    </>
+                );
+            }
+            
+            if (completed) {
+                return (
+                    <>
+                        <div className="header">
+                            <h1>{topic.icon} {topic.title}</h1>
+                            <p>Сессия завершена</p>
+                        </div>
+                        <CompletionScreen onRestart={handleRestart} stats={stats} />
+                    </>
+                );
+            }
+            
+            const currentCard = sessionCards[currentIndex];
+            
+            return (
+                <>
+                    <div className="header">
+                        <h1>{topic.icon} {topic.title}</h1>
+                        <p>{mode === 'study' ? 'Изучение' : mode === 'practice' ? 'Тренировка' : 'Тест'}</p>
+                    </div>
+                    
+                    <div className="content">
+                        <ProgressBar 
+                            current={currentIndex + 1}
+                            total={sessionCards.length}
+                        />
+                        
+                        <FlashCard
+                            card={currentCard}
+                            onAnswer={handleAnswer}
+                            onFlip={handleFlip}
+                            isFlipped={isFlipped}
+                        />
+                        
+                        <button 
+                            className="btn-restart"
+                            onClick={handleRestart}
+                            style={{ width: '100%', marginTop: '20px' }}
+                        >
+                            🏠 Вернуться в меню
+                        </button>
+                    </div>
+                </>
+            );
+        }
+        
+        // ========== RENDER ==========
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
