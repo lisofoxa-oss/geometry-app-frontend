@@ -6,13 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
-	"scripts": {
-    "dev": "vite",
-    "build": "vite build",
     "preview": "vite preview",
-    "deploy": "vite build && gh-pages -d dist",
-    "preview": "vite preview"
+    "lint": "eslint .",
+    "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
     "react": "^19.2.0",
